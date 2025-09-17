@@ -1,0 +1,2600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroCoders - Smart Farming Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 50%, #81C784 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Login Section */
+        .login-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .login-section.hidden {
+            display: none;
+        }
+
+        .logo {
+            font-size: 3rem;
+            color: #2E7D32;
+            margin-bottom: 20px;
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Main Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .welcome-text {
+            color: #2E7D32;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .location-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .action-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .action-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .action-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Weather Widget */
+        .weather-widget {
+            background: linear-gradient(135deg, #1976D2 0%, #42A5F5 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .weather-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .weather-temp {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .weather-item {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        /* Market Prices */
+        .market-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #2E7D32;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .price-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .price-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .crop-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .crop-price {
+            font-size: 1.2rem;
+            color: #2E7D32;
+            font-weight: bold;
+        }
+
+        .price-change {
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        .price-up {
+            color: #4CAF50;
+        }
+
+        .price-down {
+            color: #f44336;
+        }
+
+        /* AI Chatbot */
+        .chatbot-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .chat-container {
+            height: 300px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 15px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background: #4CAF50;
+            color: white;
+            margin-left: auto;
+        }
+
+        .bot-message {
+            background: white;
+            color: #333;
+            border: 1px solid #e1e5e9;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .send-btn, .voice-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Disease Detection */
+        .disease-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .upload-area {
+            border: 2px dashed #4CAF50;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-area:hover {
+            background-color: #f8f9fa;
+        }
+
+        .upload-area.dragover {
+            background-color: #e8f5e8;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .camera-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 1rem;
+        }
+
+        /* Alerts Section */
+        .alerts-section {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+        }
+
+        /* Language Selector */
+        .language-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        /* Voice Assistant */
+        .voice-assistant {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .voice-assistant:hover {
+            transform: scale(1.1);
+        }
+
+        .voice-assistant.listening {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .weather-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .price-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .recommendation-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <select id="languageSelect" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="te">తెలుగు</option>
+            <option value="ta">தமிழ்</option>
+            <option value="bn">বাংলা</option>
+            <option value="mr">मराठी</option>
+        </select>
+    </div>
+
+    <!-- Voice Assistant Button -->
+    <button class="voice-assistant" id="voiceAssistant" onclick="toggleVoiceAssistant()">🎤</button>
+
+    <div class="container">
+        <!-- Login Section -->
+        <div class="login-section" id="loginSection">
+            <div class="logo">🌾 AgroCoders</div>
+            <h2 data-translate="welcome">Welcome to Smart Farming Assistant</h2>
+            <p data-translate="loginDesc">Your AI-powered farming companion for better yields and sustainable agriculture</p>
+            
+            <form class="login-form" onsubmit="login(event)">
+                <div class="form-group">
+                    <label for="username" data-translate="username">Username / Mobile Number</label>
+                    <input type="text" id="username" required placeholder="Enter your username or mobile">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" data-translate="password">Password</label>
+                    <input type="password" id="password" required placeholder="Enter your password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="location" data-translate="location">Select Your Location</label>
+                    <select id="location" required>
+                        <option value="">Choose your district</option>
+                        <option value="ludhiana">Ludhiana, Punjab</option>
+                        <option value="amritsar">Amritsar, Punjab</option>
+                        <option value="karnal">Karnal, Haryana</option>
+                        <option value="hisar">Hisar, Haryana</option>
+                        <option value="meerut">Meerut, Uttar Pradesh</option>
+                        <option value="agra">Agra, Uttar Pradesh</option>
+                        <option value="pune">Pune, Maharashtra</option>
+                        <option value="nashik">Nashik, Maharashtra</option>
+                        <option value="mysore">Mysore, Karnataka</option>
+                        <option value="belgaum">Belgaum, Karnataka</option>
+                        <option value="coimbatore">Coimbatore, Tamil Nadu</option>
+                        <option value="salem">Salem, Tamil Nadu</option>
+                        <option value="guntur">Guntur, Andhra Pradesh</option>
+                        <option value="krishna">Krishna, Andhra Pradesh</option>
+                        <option value="warangal">Warangal, Telangana</option>
+                        <option value="nizamabad">Nizamabad, Telangana</option>
+                        <option value="hooghly">Hooghly, West Bengal</option>
+                        <option value="bardhaman">Bardhaman, West Bengal</option>
+                        <option value="ahmedabad">Ahmedabad, Gujarat</option>
+                        <option value="surat">Surat, Gujarat</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="login-btn" data-translate="loginBtn">Login to Dashboard</button>
+            </form>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div class="dashboard" id="dashboard">
+            <!-- Header -->
+            <div class="header">
+                <div class="welcome-text">
+                    <span data-translate="welcomeBack">Welcome back,</span> <span id="farmerName">Farmer</span>! 🌱
+                </div>
+                <div class="location-info">
+                    <span>📍</span>
+                    <span id="currentLocation">Loading location...</span>
+                </div>
+            </div>
+
+            <!-- Weather Widget -->
+            <div class="weather-widget">
+                <div class="weather-header">
+                    <div>
+                        <h3 data-translate="todayWeather">Today's Weather</h3>
+                        <div class="weather-temp" id="temperature">28°C</div>
+                        <div id="weatherCondition">Partly Cloudy</div>
+                    </div>
+                    <div style="font-size: 4rem;">⛅</div>
+                </div>
+                <div class="weather-details">
+                    <div class="weather-item">
+                        <div data-translate="humidity">Humidity</div>
+                        <div id="humidity">65%</div>
+                    </div>
+                    <div class="weather-item">
+                        <div data-translate="rainfall">Rainfall</div>
+                        <div id="rainfall">2mm</div>
+                    </div>
+                    <div class="weather-item">
+                        <div data-translate="windSpeed">Wind Speed</div>
+                        <div id="windSpeed">12 km/h</div>
+                    </div>
+                    <div class="weather-item">
+                        <div data-translate="uvIndex">UV Index</div>
+                        <div id="uvIndex">6 (High)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerts Section -->
+            <div class="alerts-section" id="alertsSection">
+                <h3 data-translate="weatherAlerts">⚠️ Weather Alerts & Recommendations</h3>
+                <div id="alertsList">
+                    <div class="alert-item">
+                        <span class="alert-icon">🌧️</span>
+                        <div>
+                            <strong data-translate="rainAlert">Heavy Rain Expected</strong>
+                            <p data-translate="rainAlertDesc">Heavy rainfall expected in next 2 days. Avoid spraying pesticides.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="action-card" onclick="openModal('cropRecommendation')">
+                    <div class="action-icon">🌱</div>
+                    <div class="action-title" data-translate="cropRecommendation">Crop Recommendation</div>
+                    <div class="action-desc" data-translate="cropRecommendationDesc">Get AI-powered crop suggestions based on your soil and weather</div>
+                </div>
+                
+                <div class="action-card" onclick="openModal('diseaseDetection')">
+                    <div class="action-icon">📸</div>
+                    <div class="action-title" data-translate="diseaseDetection">Disease Detection</div>
+                    <div class="action-desc" data-translate="diseaseDetectionDesc">Upload plant photos to detect diseases and get treatment advice</div>
+                </div>
+                
+                <div class="action-card" onclick="openModal('fertilizerGuide')">
+                    <div class="action-icon">🧪</div>
+                    <div class="action-title" data-translate="fertilizerGuide">Fertilizer Guide</div>
+                    <div class="action-desc" data-translate="fertilizerGuideDesc">Get personalized fertilizer recommendations for better yield</div>
+                </div>
+                
+                <div class="action-card" onclick="openModal('pestControl')">
+                    <div class="action-icon">🐛</div>
+                    <div class="action-title" data-translate="pestControl">Pest Control</div>
+                    <div class="action-desc" data-translate="pestControlDesc">Identify pests and get organic treatment solutions</div>
+                </div>
+            </div>
+
+            <!-- Market Prices -->
+            <div class="market-section">
+                <h3 class="section-title">
+                    <span>💰</span>
+                    <span data-translate="marketPrices">Today's Market Prices</span>
+                </h3>
+                <div class="price-grid" id="priceGrid">
+                    <!-- Market prices will be populated here -->
+                </div>
+            </div>
+
+            <!-- AI Chatbot -->
+            <div class="chatbot-section">
+                <h3 class="section-title">
+                    <span>🤖</span>
+                    <span data-translate="aiAssistant">AI Farming Assistant</span>
+                </h3>
+                <div class="chat-container" id="chatContainer">
+                    <div class="chat-message bot-message">
+                        <span data-translate="botWelcome">Hello! I'm your AI farming assistant. Ask me anything about crops, weather, fertilizers, or farming techniques. How can I help you today?</span>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Type your question here..." data-translate-placeholder="chatPlaceholder">
+                    <button class="voice-btn" onclick="startVoiceInput()">🎤</button>
+                    <button class="send-btn" onclick="sendMessage()" data-translate="send">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Crop Recommendation Modal -->
+    <div id="cropRecommendationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cropRecommendationModal')">&times;</span>
+            <h2 data-translate="cropRecommendationTitle">🌱 Crop Recommendation System</h2>
+            
+            <div class="form-group">
+                <label data-translate="soilType">Soil Type:</label>
+                <select id="soilType">
+                    <option value="clay" data-translate="clay">Clay Soil</option>
+                    <option value="sandy" data-translate="sandy">Sandy Soil</option>
+                    <option value="loamy" data-translate="loamy">Loamy Soil</option>
+                    <option value="black" data-translate="black">Black Soil</option>
+                    <option value="red" data-translate="red">Red Soil</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label data-translate="season">Season:</label>
+                <select id="season">
+                    <option value="kharif" data-translate="kharif">Kharif (Monsoon)</option>
+                    <option value="rabi" data-translate="rabi">Rabi (Winter)</option>
+                    <option value="zaid" data-translate="zaid">Zaid (Summer)</option>
+                </select>
+            </div>
+            
+            <button class="login-btn" onclick="getCropRecommendation()" data-translate="getRecommendation">Get Recommendation</button>
+            
+            <div id="cropRecommendationResult"></div>
+        </div>
+    </div>
+
+    <!-- Disease Detection Modal -->
+    <div id="diseaseDetectionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('diseaseDetectionModal')">&times;</span>
+            <h2 data-translate="diseaseDetectionTitle">📸 Plant Disease Detection</h2>
+            
+            <div class="upload-area" onclick="document.getElementById('diseaseImage').click()">
+                <p data-translate="uploadInstruction">Click here to upload plant image or drag and drop</p>
+                <p data-translate="cameraInstruction">You can also use camera to take a photo</p>
+                <input type="file" id="diseaseImage" class="file-input" accept="image/*" onchange="analyzeDisease()">
+                <button class="camera-btn" onclick="openCamera()" data-translate="useCamera">📷 Use Camera</button>
+            </div>
+            
+            <div id="diseaseResult"></div>
+        </div>
+    </div>
+
+    <!-- Fertilizer Guide Modal -->
+    <div id="fertilizerGuideModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('fertilizerGuideModal')">&times;</span>
+            <h2 data-translate="fertilizerGuideTitle">🧪 Fertilizer Recommendation</h2>
+            
+            <div class="form-group">
+                <label data-translate="cropType">Crop Type:</label>
+                <select id="cropType">
+                    <option value="rice" data-translate="rice">Rice</option>
+                    <option value="wheat" data-translate="wheat">Wheat</option>
+                    <option value="corn" data-translate="corn">Corn</option>
+                    <option value="cotton" data-translate="cotton">Cotton</option>
+                    <option value="sugarcane" data-translate="sugarcane">Sugarcane</option>
+                    <option value="tomato" data-translate="tomato">Tomato</option>
+                    <option value="potato" data-translate="potato">Potato</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label data-translate="growthStage">Growth Stage:</label>
+                <select id="growthStage">
+                    <option value="seedling" data-translate="seedling">Seedling</option>
+                    <option value="vegetative" data-translate="vegetative">Vegetative</option>
+                    <option value="flowering" data-translate="flowering">Flowering</option>
+                    <option value="fruiting" data-translate="fruiting">Fruiting</option>
+                </select>
+            </div>
+            
+            <button class="login-btn" onclick="getFertilizerRecommendation()" data-translate="getRecommendation">Get Fertilizer Guide</button>
+            
+            <div id="fertilizerResult"></div>
+        </div>
+    </div>
+
+    <!-- Pest Control Modal -->
+    <div id="pestControlModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('pestControlModal')">&times;</span>
+            <h2 data-translate="pestControlTitle">🐛 Pest Control Guide</h2>
+            
+            <div class="form-group">
+                <label data-translate="pestType">Pest Type:</label>
+                <select id="pestType">
+                    <option value="aphids" data-translate="aphids">Aphids</option>
+                    <option value="caterpillar" data-translate="caterpillar">Caterpillars</option>
+                    <option value="whitefly" data-translate="whitefly">Whitefly</option>
+                    <option value="thrips" data-translate="thrips">Thrips</option>
+                    <option value="mites" data-translate="mites">Spider Mites</option>
+                </select>
+            </div>
+            
+            <button class="login-btn" onclick="getPestControlAdvice()" data-translate="getAdvice">Get Control Methods</button>
+            
+            <div id="pestControlResult"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let currentLanguage = 'en';
+        let isVoiceListening = false;
+
+        // Translation data
+        const translations = {
+            en: {
+                welcome: "Welcome to Smart Farming Assistant",
+                loginDesc: "Your AI-powered farming companion for better yields and sustainable agriculture",
+                username: "Username / Mobile Number",
+                password: "Password",
+                location: "Select Your Location",
+                loginBtn: "Login to Dashboard",
+                welcomeBack: "Welcome back,",
+                todayWeather: "Today's Weather",
+                humidity: "Humidity",
+                rainfall: "Rainfall",
+                windSpeed: "Wind Speed",
+                uvIndex: "UV Index",
+                weatherAlerts: "⚠️ Weather Alerts & Recommendations",
+                rainAlert: "Heavy Rain Expected",
+                rainAlertDesc: "Heavy rainfall expected in next 2 days. Avoid spraying pesticides.",
+                cropRecommendation: "Crop Recommendation",
+                cropRecommendationDesc: "Get AI-powered crop suggestions based on your soil and weather",
+                diseaseDetection: "Disease Detection",
+                diseaseDetectionDesc: "Upload plant photos to detect diseases and get treatment advice",
+                fertilizerGuide: "Fertilizer Guide",
+                fertilizerGuideDesc: "Get personalized fertilizer recommendations for better yield",
+                pestControl: "Pest Control",
+                pestControlDesc: "Identify pests and get organic treatment solutions",
+                marketPrices: "Today's Market Prices",
+                aiAssistant: "AI Farming Assistant",
+                botWelcome: "Hello! I'm your AI farming assistant. Ask me anything about crops, weather, fertilizers, or farming techniques. How can I help you today?",
+                chatPlaceholder: "Type your question here...",
+                send: "Send"
+            },
+            hi: {
+                welcome: "स्मार्ट कृषि सहायक में आपका स्वागत है",
+                loginDesc: "बेहतर उत्पादन और टिकाऊ कृषि के लिए आपका AI-संचालित कृषि साथी",
+                username: "उपयोगकर्ता नाम / मोबाइल नंबर",
+                password: "पासवर्ड",
+                location: "अपना स्थान चुनें",
+                loginBtn: "डैशबोर्ड में लॉगिन करें",
+                welcomeBack: "वापस स्वागत है,",
+                todayWeather: "आज का मौसम",
+                humidity: "नमी",
+                rainfall: "वर्षा",
+                windSpeed: "हवा की गति",
+                uvIndex: "UV सूचकांक",
+                weatherAlerts: "⚠️ मौसम चेतावनी और सुझाव",
+                rainAlert: "भारी बारिश की उम्मीद",
+                rainAlertDesc: "अगले 2 दिनों में भारी बारिश की उम्मीद। कीटनाशक छिड़काव से बचें।",
+                cropRecommendation: "फसल सुझाव",
+                cropRecommendationDesc: "अपनी मिट्टी और मौसम के आधार पर AI-संचालित फसल सुझाव प्राप्त करें",
+                diseaseDetection: "रोग पहचान",
+                diseaseDetectionDesc: "रोगों की पहचान और उपचार सलाह के लिए पौधों की तस्वीरें अपलोड करें",
+                fertilizerGuide: "उर्वरक गाइड",
+                fertilizerGuideDesc: "बेहतर उत्पादन के लिए व्यक्तिगत उर्वरक सुझाव प्राप्त करें",
+                pestControl: "कीट नियंत्रण",
+                pestControlDesc: "कीटों की पहचान करें और जैविक उपचार समाधान प्राप्त करें",
+                marketPrices: "आज के बाजार भाव",
+                aiAssistant: "AI कृषि सहायक",
+                botWelcome: "नमस्ते! मैं आपका AI कृषि सहायक हूं। फसल, मौसम, उर्वरक या कृषि तकनीकों के बारे में कुछ भी पूछें। आज मैं आपकी कैसे मदद कर सकता हूं?",
+                chatPlaceholder: "यहाँ अपना प्रश्न टाइप करें...",
+                send: "भेजें"
+            }
+        };
+
+        // Initialize the application
+        window.onload = function() {
+            loadMarketPrices();
+            getCurrentLocation();
+            updateWeatherData();
+            
+            // Set up chat input enter key
+            document.getElementById('chatInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        };
+
+        // Login function
+        function login(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const location = document.getElementById('location').value;
+            
+            // Simple validation (in real app, this would be server-side)
+            if (username && password && location) {
+                currentUser = {
+                    name: username,
+                    location: location
+                };
+                
+                document.getElementById('farmerName').textContent = username;
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('dashboard').classList.add('active');
+                
+                // Update location display
+                document.getElementById('currentLocation').textContent = location;
+                
+                // Welcome message
+                speakText(`Welcome ${username}! Your farming dashboard is ready.`);
+            } else {
+                alert('Please fill all fields');
+            }
+        }
+
+        // Get current location
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    
+                    // In a real app, you would use a geocoding service
+                    console.log(`Location: ${lat}, ${lon}`);
+                });
+            }
+        }
+
+        // Update weather data
+        function updateWeatherData() {
+            // Simulated weather data (in real app, fetch from weather API)
+            const weatherData = {
+                temperature: Math.floor(Math.random() * 15) + 20,
+                condition: ['Sunny', 'Partly Cloudy', 'Cloudy', 'Rainy'][Math.floor(Math.random() * 4)],
+                humidity: Math.floor(Math.random() * 40) + 40,
+                rainfall: Math.floor(Math.random() * 10),
+                windSpeed: Math.floor(Math.random() * 20) + 5,
+                uvIndex: Math.floor(Math.random() * 10) + 1
+            };
+            
+            document.getElementById('temperature').textContent = `${weatherData.temperature}°C`;
+            document.getElementById('weatherCondition').textContent = weatherData.condition;
+            document.getElementById('humidity').textContent = `${weatherData.humidity}%`;
+            document.getElementById('rainfall').textContent = `${weatherData.rainfall}mm`;
+            document.getElementById('windSpeed').textContent = `${weatherData.windSpeed} km/h`;
+            document.getElementById('uvIndex').textContent = `${weatherData.uvIndex} ${weatherData.uvIndex > 7 ? '(Very High)' : weatherData.uvIndex > 5 ? '(High)' : '(Moderate)'}`;
+        }
+
+        // Load market prices
+        function loadMarketPrices() {
+            const crops = [
+                { name: 'Rice', price: 2850, change: '+2.5%', trend: 'up' },
+                { name: 'Wheat', price: 2150, change: '-1.2%', trend: 'down' },
+                { name: 'Cotton', price: 5800, change: '+5.8%', trend: 'up' },
+                { name: 'Sugarcane', price: 350, change: '+0.8%', trend: 'up' },
+                { name: 'Tomato', price: 25, change: '-8.5%', trend: 'down' },
+                { name: 'Onion', price: 18, change: '+12.3%', trend: 'up' },
+                { name: 'Potato', price: 22, change: '+3.2%', trend: 'up' },
+                { name: 'Corn', price: 1850, change: '-0.5%', trend: 'down' }
+            ];
+            
+            const priceGrid = document.getElementById('priceGrid');
+            priceGrid.innerHTML = '';
+            
+            crops.forEach(crop => {
+                const priceCard = document.createElement('div');
+                priceCard.className = 'price-card';
+                priceCard.innerHTML = `
+                    <div class="crop-name">${crop.name}</div>
+                    <div class="crop-price">₹${crop.price}/quintal</div>
+                    <div class="price-change ${crop.trend === 'up' ? 'price-up' : 'price-down'}">
+                        ${crop.trend === 'up' ? '↗' : '↘'} ${crop.change}
+                    </div>
+                `;
+                priceGrid.appendChild(priceCard);
+            });
+        }
+
+        // AI Chatbot functions
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addChatMessage(message, 'user');
+                input.value = '';
+                
+                // Simulate AI response
+                setTimeout(() => {
+                    const response = getAIResponse(message);
+                    addChatMessage(response, 'bot');
+                    speakText(response);
+                }, 1000);
+            }
+        }
+
+        function addChatMessage(message, sender) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}-message`;
+            messageDiv.textContent = message;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function getAIResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('weather') || lowerMessage.includes('rain') || lowerMessage.includes('temperature')) {
+                return "Based on current weather conditions, I recommend avoiding pesticide spraying for the next 2 days due to expected rainfall. This is a good time for soil preparation and organic fertilizer application.";
+            } else if (lowerMessage.includes('fertilizer') || lowerMessage.includes('nutrients')) {
+                return "For this season, I recommend using organic compost mixed with NPK fertilizer in 4:2:1 ratio. Apply 2 weeks before sowing for best results. Avoid over-fertilization as it can harm soil health.";
+            } else if (lowerMessage.includes('pest') || lowerMessage.includes('insect') || lowerMessage.includes('disease')) {
+                return "For natural pest control, try neem oil spray (2ml per liter water) in evening hours. Also consider companion planting with marigold and basil. Upload a photo of affected plants for specific treatment advice.";
+            } else if (lowerMessage.includes('crop') || lowerMessage.includes('plant') || lowerMessage.includes('grow')) {
+                return "Based on your soil type and current weather, I suggest considering drought-resistant varieties. Crop rotation with legumes will improve soil nitrogen. Check the crop recommendation tool for detailed suggestions.";
+            } else if (lowerMessage.includes('price') || lowerMessage.includes('market') || lowerMessage.includes('sell')) {
+                return "Current market prices are favorable for cotton and onions. Consider direct selling to avoid middleman costs. Check government e-NAM portal for best rates in your area.";
+            } else {
+                return "I'm here to help with farming advice! Ask me about weather, crops, fertilizers, pest control, market prices, or any farming techniques. You can also use voice commands or upload plant photos for disease detection.";
+            }
+        }
+
+        // Voice functions
+        function startVoiceInput() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-US';
+
+                recognition.onstart = function() {
+                    document.querySelector('.voice-btn').style.background = '#ff6b6b';
+                };
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('chatInput').value = transcript;
+                    sendMessage();
+                };
+
+                recognition.onend = function() {
+                    document.querySelector('.voice-btn').style.background = '#4CAF50';
+                };
+
+                recognition.start();
+            } else {
+                alert('Voice recognition not supported in this browser');
+            }
+        }
+
+        function toggleVoiceAssistant() {
+            const button = document.getElementById('voiceAssistant');
+            
+            if (!isVoiceListening) {
+                startVoiceAssistant();
+                button.classList.add('listening');
+                isVoiceListening = true;
+            } else {
+                stopVoiceAssistant();
+                button.classList.remove('listening');
+                isVoiceListening = false;
+            }
+        }
+
+        function startVoiceAssistant() {
+            speakText("Voice assistant activated. How can I help you with your farming today?");
+            
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                
+                recognition.continuous = true;
+                recognition.interimResults = false;
+                recognition.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-US';
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase();
+                    processVoiceCommand(transcript);
+                };
+
+                recognition.start();
+                window.voiceRecognition = recognition;
+            }
+        }
+
+        function stopVoiceAssistant() {
+            if (window.voiceRecognition) {
+                window.voiceRecognition.stop();
+            }
+            speakText("Voice assistant deactivated");
+        }
+
+        function processVoiceCommand(command) {
+            if (command.includes('weather') || command.includes('मौसम')) {
+                speakText("Current temperature is 28 degrees celsius with partly cloudy conditions. Humidity is 65 percent.");
+            } else if (command.includes('price') || command.includes('भाव') || command.includes('दाम')) {
+                speakText("Today's rice price is 2850 rupees per quintal, up by 2.5 percent. Cotton is at 5800 rupees per quintal.");
+            } else if (command.includes('crop recommendation') || command.includes('फसल सुझाव')) {
+                openModal('cropRecommendation');
+                speakText("Opening crop recommendation tool for you");
+            } else if (command.includes('disease') || command.includes('बीमारी')) {
+                openModal('diseaseDetection');
+                speakText("Opening disease detection tool. You can upload plant photos here.");
+            } else {
+                addChatMessage(command, 'user');
+                const response = getAIResponse(command);
+                addChatMessage(response, 'bot');
+                speakText(response);
+            }
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-US';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Modal functions
+        function openModal(modalType) {
+            const modalId = modalType + 'Modal';
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Crop recommendation
+        function getCropRecommendation() {
+            const soilType = document.getElementById('soilType').value;
+            const season = document.getElementById('season').value;
+            
+            const recommendations = {
+                'clay-kharif': ['Rice', 'Cotton', 'Sugarcane'],
+                'clay-rabi': ['Wheat', 'Mustard', 'Gram'],
+                'sandy-kharif': ['Millet', 'Groundnut', 'Cotton'],
+                'sandy-rabi': ['Barley', 'Mustard', 'Cumin'],
+                'loamy-kharif': ['Rice', 'Corn', 'Soybean'],
+                'loamy-rabi': ['Wheat', 'Peas', 'Potato'],
+                'black-kharif': ['Cotton', 'Sugarcane', 'Soybean'],
+                'black-rabi': ['Wheat', 'Gram', 'Linseed'],
+                'red-kharif': ['Rice', 'Ragi', 'Groundnut'],
+                'red-rabi': ['Wheat', 'Barley', 'Gram']
+            };
+            
+            const key = `${soilType}-${season}`;
+            const crops = recommendations[key] || ['Rice', 'Wheat', 'Cotton'];
+            
+            const resultDiv = document.getElementById('cropRecommendationResult');
+            resultDiv.innerHTML = `
+                <div class="recommendation-card">
+                    <h4>🌾 Recommended Crops for ${soilType} soil in ${season} season:</h4>
+                    <ul>
+                        ${crops.map(crop => `<li><strong>${crop}</strong> - High yield potential with current conditions</li>`).join('')}
+                    </ul>
+                    <p><strong>💡 Tip:</strong> Consider crop rotation and organic farming practices for sustainable yield.</p>
+                </div>
+            `;
+            
+            speakText(`For ${soilType} soil in ${season} season, I recommend growing ${crops.join(', ')}`);
+        }
+
+        // Disease detection
+        function analyzeDisease() {
+            const fileInput = document.getElementById('diseaseImage');
+            const file = fileInput.files[0];
+            
+            if (file) {
+                const resultDiv = document.getElementById('diseaseResult');
+                resultDiv.innerHTML = `
+                    <div class="recommendation-card">
+                        <h4>🔍 Disease Analysis Result:</h4>
+                        <p><strong>Detected:</strong> Leaf Blight (Simulated Result)</p>
+                        <p><strong>Confidence:</strong> 85%</p>
+                        <h5>Treatment Recommendations:</h5>
+                        <ul>
+                            <li>Remove affected leaves immediately</li>
+                            <li>Apply copper-based fungicide spray</li>
+                            <li>Improve air circulation around plants</li>
+                            <li>Avoid overhead watering</li>
+                        </ul>
+                        <p><strong>⚠️ Prevention:</strong> Use disease-resistant varieties and maintain proper plant spacing.</p>
+                    </div>
+                `;
+                
+                speakText("Disease analysis complete. Leaf blight detected with 85% confidence. Check the recommendations for treatment.");
+            }
+        }
+
+        function openCamera() {
+            // In a real app, this would open camera interface
+            alert('Camera feature would open here. For demo, please use file upload.');
+        }
+
+        // Fertilizer recommendation
+        function getFertilizerRecommendation() {
+            const cropType = document.getElementById('cropType').value;
+            const growthStage = document.getElementById('growthStage').value;
+            
+            const fertilizers = {
+                'rice-seedling': 'NPK 10:26:26 @ 100kg/hectare + Organic compost 2 tons/hectare',
+                'rice-vegetative': 'Urea @ 50kg/hectare + Potash @ 25kg/hectare',
+                'rice-flowering': 'NPK 19:19:19 @ 75kg/hectare',
+                'rice-fruiting': 'Potash @ 30kg/hectare + Micronutrient spray',
+                'wheat-seedling': 'DAP @ 100kg/hectare + Potash @ 50kg/hectare',
+                'wheat-vegetative': 'Urea @ 100kg/hectare in 2 splits',
+                'wheat-flowering': 'NPK 12:32:16 @ 50kg/hectare',
+                'wheat-fruiting': 'Foliar spray of micronutrients'
+            };
+            
+            const key = `${cropType}-${growthStage}`;
+            const recommendation = fertilizers[key] || 'NPK 10:10:10 @ 100kg/hectare + Organic matter';
+            
+            const resultDiv = document.getElementById('fertilizerResult');
+            resultDiv.innerHTML = `
+                <div class="recommendation-card">
+                    <h4>🧪 Fertilizer Recommendation for ${cropType} (${growthStage} stage):</h4>
+                    <p><strong>Recommended:</strong> ${recommendation}</p>
+                    <h5>Application Guidelines:</h5>
+                    <ul>
+                        <li>Apply in early morning or evening</li>
+                        <li>Ensure adequate soil moisture</li>
+                        <li>Mix with soil properly</li>
+                        <li>Avoid application before heavy rain</li>
+                    </ul>
+                    <p><strong>💡 Organic Alternative:</strong> Use vermicompost and bio-fertilizers for sustainable farming.</p>
+                </div>
+            `;
+            
+            speakText(`For ${cropType} in ${growthStage} stage, apply ${recommendation}`);
+        }
+
+        // Pest control advice
+        function getPestControlAdvice() {
+            const pestType = document.getElementById('pestType').value;
+            
+            const treatments = {
+                'aphids': {
+                    organic: 'Neem oil spray (5ml/liter) + Soap solution',
+                    chemical: 'Imidacloprid 17.8% SL @ 0.3ml/liter',
+                    prevention: 'Encourage beneficial insects like ladybugs'
+                },
+                'caterpillar': {
+                    organic: 'Bt (Bacillus thuringiensis) spray + Hand picking',
+                    chemical: 'Chlorpyrifos 20% EC @ 2ml/liter',
+                    prevention: 'Use pheromone traps and crop rotation'
+                },
+                'whitefly': {
+                    organic: 'Yellow sticky traps + Neem oil spray',
+                    chemical: 'Thiamethoxam 25% WG @ 0.2g/liter',
+                    prevention: 'Remove weed hosts and use reflective mulch'
+                }
+            };
+            
+            const treatment = treatments[pestType] || treatments['aphids'];
+            
+            const resultDiv = document.getElementById('pestControlResult');
+            resultDiv.innerHTML = `
+                <div class="recommendation-card">
+                    <h4>🐛 ${pestType.charAt(0).toUpperCase() + pestType.slice(1)} Control Methods:</h4>
+                    <h5>🌿 Organic Treatment:</h5>
+                    <p>${treatment.organic}</p>
+                    <h5>🧪 Chemical Treatment (if severe):</h5>
+                    <p>${treatment.chemical}</p>
+                    <h5>🛡️ Prevention:</h5>
+                    <p>${treatment.prevention}</p>
+                    <p><strong>⚠️ Safety:</strong> Always wear protective equipment and follow label instructions.</p>
+                </div>
+            `;
+            
+            speakText(`For ${pestType} control, use organic methods first. ${treatment.organic}`);
+        }
+
+        // Language change
+        function changeLanguage() {
+            currentLanguage = document.getElementById('languageSelect').value;
+            
+            // Update all translatable elements
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.textContent = translations[currentLanguage][key];
+                }
+            });
+            
+            // Update placeholders
+            const placeholders = document.querySelectorAll('[data-translate-placeholder]');
+            placeholders.forEach(element => {
+                const key = element.getAttribute('data-translate-placeholder');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.placeholder = translations[currentLanguage][key];
+                }
+            });
+            
+            speakText(currentLanguage === 'hi' ? 'भाषा बदल दी गई है' : 'Language changed successfully');
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        };
+
+        // Update weather every 30 minutes
+        setInterval(updateWeatherData, 30 * 60 * 1000);
+        
+        // Update market prices every hour
+        setInterval(loadMarketPrices, 60 * 60 * 1000);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'980a4b32d5fa93d3',t:'MTc1ODEyOTgzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroCoders - Smart Farming Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 50%, #81C784 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Login Section */
+        .login-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .login-section.hidden {
+            display: none;
+        }
+
+        .logo {
+            font-size: 3rem;
+            color: #2E7D32;
+            margin-bottom: 20px;
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Main Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .welcome-text {
+            color: #2E7D32;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .location-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .action-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .action-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .action-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Weather Widget */
+        .weather-widget {
+            background: linear-gradient(135deg, #1976D2 0%, #42A5F5 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .weather-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .weather-temp {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .weather-item {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        /* Market Prices */
+        .market-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #2E7D32;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .price-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .price-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .crop-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .crop-price {
+            font-size: 1.2rem;
+            color: #2E7D32;
+            font-weight: bold;
+        }
+
+        .price-change {
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        .price-up {
+            color: #4CAF50;
+        }
+
+        .price-down {
+            color: #f44336;
+        }
+
+        /* AI Chatbot */
+        .chatbot-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .chat-container {
+            height: 300px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 15px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background: #4CAF50;
+            color: white;
+            margin-left: auto;
+        }
+
+        .bot-message {
+            background: white;
+            color: #333;
+            border: 1px solid #e1e5e9;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .send-btn, .voice-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Disease Detection */
+        .disease-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .upload-area {
+            border: 2px dashed #4CAF50;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-area:hover {
+            background-color: #f8f9fa;
+        }
+
+        .upload-area.dragover {
+            background-color: #e8f5e8;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .camera-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 1rem;
+        }
+
+        /* Alerts Section */
+        .alerts-section {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+        }
+
+        /* Language Selector */
+        .language-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        /* Voice Assistant */
+        .voice-assistant {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .voice-assistant:hover {
+            transform: scale(1.1);
+        }
+
+        .voice-assistant.listening {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .weather-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .price-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .recommendation-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <select id="languageSelect" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="te">తెలుగు</option>
+            <option value="ta">தமிழ்</option>
+            <option value="bn">বাংলা</option>
+            <option value="mr">मराठी</option>
+        </select>
+    </div>
+
+    <!-- Voice Assistant Button -->
+    <button class="voice-assistant" id="voiceAssistant" onclick="toggleVoiceAssistant()">🎤</button>
+
+    <div class="container">
+        <!-- Login Section -->
+        <div class="login-section" id="loginSection">
+            <div class="logo">🌾 AgroCoders</div>
+            <h2 data-translate="welcome">Welcome to Smart Farming Assistant</h2>
+            <p data-translate="loginDesc">Your AI-powered farming companion for better yields and sustainable agriculture</p>
+            
+            <form class="login-form" onsubmit="login(event)">
+                <div class="form-group">
+                    <label for="username" data-translate="username">Username / Mobile Number</label>
+                    <input type="text" id="username" required placeholder="Enter your username or mobile">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" data-translate="password">Password</label>
+                    <input type="password" id="password" required placeholder="Enter your password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="location" data-translate="location">Select Your Location</label>
+                    <select id="location" required>
+                        <option value="">Choose your district</option>
+                        <option value="ludhiana">Ludhiana, Punjab</option>
+                        <option value="amritsar">Amritsar, Punjab</option>
+                        <option value="karnal">Karnal, Haryana</option>
+                        <option value="hisar">Hisar, Haryana</option>
+                        <option value="meerut">Meerut, Uttar Pradesh</option>
+                        <option value="agra">Agra, Uttar Pradesh</option>
+                        <option value="pune">Pune, Maharashtra</option>
+                        <option value="nashik">Nashik, Maharashtra</option>
+                        <option value="mysore">Mysore, Karnataka</option>
+                        <option value="belgaum">Belgaum, Karnataka</option>
+                        <option value="coimbatore">Coimbatore, Tamil Nadu</option>
+                        <option value="salem">Salem, Tamil Nadu</option>
+                        <option value="guntur">Guntur, Andhra Pradesh</option>
+                        <option value="krishna">Krishna, Andhra Pradesh</option>
+                        <option value="warangal">Warangal, Telangana</option>
+                        <option value="nizamabad">Nizamabad, Telangana</option>
+                        <option value="hooghly">Hooghly, West Bengal</option>
+                        <option value="bardhaman">Bardhaman, West Bengal</option>
+                        <option value="ahmedabad">Ahmedabad, Gujarat</option>
+                        <option value="surat">Surat, Gujarat</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="login-btn" data-translate="loginBtn">Login to Dashboard</button>
+            </form>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div class="dashboard" id="dashboard">
+            <!-- Header -->
+            <div class="header">
+                <div class="welcome-text">
+                    <span data-translate="welcomeBack">Welcome back,</span> <span id="farmerName">Farmer</span>! 🌱
+                </div>
+                <div class="location-info">
+                    <span>📍</span>
+                    <span id="currentLocation">Loading location...</span>
+                </div>
+            </div>
+
+            <!-- Weather Widget -->
+            <div class="weather-widget">
+                <div class="weather-header">
+                    <div>
+                        <h3 data-translate="todayWeather">Today's Weather</h3>
+                        <div class="weather-temp" id="temperature">28°C</div>
+                        <div id="weatherCondition">Partly Cloudy</div>
+                    </div>
+                    <div style="font-size: 4rem;">⛅</div>
+                </div>
+                <div class="weather-details">
+                    <div class="weather-item">
+                        <div data-translate="humidity">Humidity</div>
+                        <div id="humidity">65%</div>
+                    </div>
+                    <div class="weather-item">
+                        <div data-translate="rainfall">Rainfall</div>
+                        <div id="rainfall">2mm</div>
+                    </div>
+                    <div class="weather-item">
+                        <div data-translate="windSpeed">Wind Speed</div>
+                        <div id="windSpeed">12 km/h</div>
+                    </div>
+                    <div class="weather-item">
+                        <div data-translate="uvIndex">UV Index</div>
+                        <div id="uvIndex">6 (High)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerts Section -->
+            <div class="alerts-section" id="alertsSection">
+                <h3 data-translate="weatherAlerts">⚠️ Weather Alerts & Recommendations</h3>
+                <div id="alertsList">
+                    <div class="alert-item">
+                        <span class="alert-icon">🌧️</span>
+                        <div>
+                            <strong data-translate="rainAlert">Heavy Rain Expected</strong>
+                            <p data-translate="rainAlertDesc">Heavy rainfall expected in next 2 days. Avoid spraying pesticides.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="action-card" onclick="openModal('cropRecommendation')">
+                    <div class="action-icon">🌱</div>
+                    <div class="action-title" data-translate="cropRecommendation">Crop Recommendation</div>
+                    <div class="action-desc" data-translate="cropRecommendationDesc">Get AI-powered crop suggestions based on your soil and weather</div>
+                </div>
+                
+                <div class="action-card" onclick="openModal('diseaseDetection')">
+                    <div class="action-icon">📸</div>
+                    <div class="action-title" data-translate="diseaseDetection">Disease Detection</div>
+                    <div class="action-desc" data-translate="diseaseDetectionDesc">Upload plant photos to detect diseases and get treatment advice</div>
+                </div>
+                
+                <div class="action-card" onclick="openModal('fertilizerGuide')">
+                    <div class="action-icon">🧪</div>
+                    <div class="action-title" data-translate="fertilizerGuide">Fertilizer Guide</div>
+                    <div class="action-desc" data-translate="fertilizerGuideDesc">Get personalized fertilizer recommendations for better yield</div>
+                </div>
+                
+                <div class="action-card" onclick="openModal('pestControl')">
+                    <div class="action-icon">🐛</div>
+                    <div class="action-title" data-translate="pestControl">Pest Control</div>
+                    <div class="action-desc" data-translate="pestControlDesc">Identify pests and get organic treatment solutions</div>
+                </div>
+            </div>
+
+            <!-- Market Prices -->
+            <div class="market-section">
+                <h3 class="section-title">
+                    <span>💰</span>
+                    <span data-translate="marketPrices">Today's Market Prices</span>
+                </h3>
+                <div class="price-grid" id="priceGrid">
+                    <!-- Market prices will be populated here -->
+                </div>
+            </div>
+
+            <!-- AI Chatbot -->
+            <div class="chatbot-section">
+                <h3 class="section-title">
+                    <span>🤖</span>
+                    <span data-translate="aiAssistant">AI Farming Assistant</span>
+                </h3>
+                <div class="chat-container" id="chatContainer">
+                    <div class="chat-message bot-message">
+                        <span data-translate="botWelcome">Hello! I'm your AI farming assistant. Ask me anything about crops, weather, fertilizers, or farming techniques. How can I help you today?</span>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Type your question here..." data-translate-placeholder="chatPlaceholder">
+                    <button class="voice-btn" onclick="startVoiceInput()">🎤</button>
+                    <button class="send-btn" onclick="sendMessage()" data-translate="send">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Crop Recommendation Modal -->
+    <div id="cropRecommendationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cropRecommendationModal')">&times;</span>
+            <h2 data-translate="cropRecommendationTitle">🌱 Crop Recommendation System</h2>
+            
+            <div class="form-group">
+                <label data-translate="soilType">Soil Type:</label>
+                <select id="soilType">
+                    <option value="clay" data-translate="clay">Clay Soil</option>
+                    <option value="sandy" data-translate="sandy">Sandy Soil</option>
+                    <option value="loamy" data-translate="loamy">Loamy Soil</option>
+                    <option value="black" data-translate="black">Black Soil</option>
+                    <option value="red" data-translate="red">Red Soil</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label data-translate="season">Season:</label>
+                <select id="season">
+                    <option value="kharif" data-translate="kharif">Kharif (Monsoon)</option>
+                    <option value="rabi" data-translate="rabi">Rabi (Winter)</option>
+                    <option value="zaid" data-translate="zaid">Zaid (Summer)</option>
+                </select>
+            </div>
+            
+            <button class="login-btn" onclick="getCropRecommendation()" data-translate="getRecommendation">Get Recommendation</button>
+            
+            <div id="cropRecommendationResult"></div>
+        </div>
+    </div>
+
+    <!-- Disease Detection Modal -->
+    <div id="diseaseDetectionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('diseaseDetectionModal')">&times;</span>
+            <h2 data-translate="diseaseDetectionTitle">📸 Plant Disease Detection</h2>
+            
+            <div class="upload-area" onclick="document.getElementById('diseaseImage').click()">
+                <p data-translate="uploadInstruction">Click here to upload plant image or drag and drop</p>
+                <p data-translate="cameraInstruction">You can also use camera to take a photo</p>
+                <input type="file" id="diseaseImage" class="file-input" accept="image/*" onchange="analyzeDisease()">
+                <button class="camera-btn" onclick="openCamera()" data-translate="useCamera">📷 Use Camera</button>
+            </div>
+            
+            <div id="diseaseResult"></div>
+        </div>
+    </div>
+
+    <!-- Fertilizer Guide Modal -->
+    <div id="fertilizerGuideModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('fertilizerGuideModal')">&times;</span>
+            <h2 data-translate="fertilizerGuideTitle">🧪 Fertilizer Recommendation</h2>
+            
+            <div class="form-group">
+                <label data-translate="cropType">Crop Type:</label>
+                <select id="cropType">
+                    <option value="rice" data-translate="rice">Rice</option>
+                    <option value="wheat" data-translate="wheat">Wheat</option>
+                    <option value="corn" data-translate="corn">Corn</option>
+                    <option value="cotton" data-translate="cotton">Cotton</option>
+                    <option value="sugarcane" data-translate="sugarcane">Sugarcane</option>
+                    <option value="tomato" data-translate="tomato">Tomato</option>
+                    <option value="potato" data-translate="potato">Potato</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label data-translate="growthStage">Growth Stage:</label>
+                <select id="growthStage">
+                    <option value="seedling" data-translate="seedling">Seedling</option>
+                    <option value="vegetative" data-translate="vegetative">Vegetative</option>
+                    <option value="flowering" data-translate="flowering">Flowering</option>
+                    <option value="fruiting" data-translate="fruiting">Fruiting</option>
+                </select>
+            </div>
+            
+            <button class="login-btn" onclick="getFertilizerRecommendation()" data-translate="getRecommendation">Get Fertilizer Guide</button>
+            
+            <div id="fertilizerResult"></div>
+        </div>
+    </div>
+
+    <!-- Pest Control Modal -->
+    <div id="pestControlModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('pestControlModal')">&times;</span>
+            <h2 data-translate="pestControlTitle">🐛 Pest Control Guide</h2>
+            
+            <div class="form-group">
+                <label data-translate="pestType">Pest Type:</label>
+                <select id="pestType">
+                    <option value="aphids" data-translate="aphids">Aphids</option>
+                    <option value="caterpillar" data-translate="caterpillar">Caterpillars</option>
+                    <option value="whitefly" data-translate="whitefly">Whitefly</option>
+                    <option value="thrips" data-translate="thrips">Thrips</option>
+                    <option value="mites" data-translate="mites">Spider Mites</option>
+                </select>
+            </div>
+            
+            <button class="login-btn" onclick="getPestControlAdvice()" data-translate="getAdvice">Get Control Methods</button>
+            
+            <div id="pestControlResult"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let currentLanguage = 'en';
+        let isVoiceListening = false;
+
+        // Translation data
+        const translations = {
+            en: {
+                welcome: "Welcome to Smart Farming Assistant",
+                loginDesc: "Your AI-powered farming companion for better yields and sustainable agriculture",
+                username: "Username / Mobile Number",
+                password: "Password",
+                location: "Select Your Location",
+                loginBtn: "Login to Dashboard",
+                welcomeBack: "Welcome back,",
+                todayWeather: "Today's Weather",
+                humidity: "Humidity",
+                rainfall: "Rainfall",
+                windSpeed: "Wind Speed",
+                uvIndex: "UV Index",
+                weatherAlerts: "⚠️ Weather Alerts & Recommendations",
+                rainAlert: "Heavy Rain Expected",
+                rainAlertDesc: "Heavy rainfall expected in next 2 days. Avoid spraying pesticides.",
+                cropRecommendation: "Crop Recommendation",
+                cropRecommendationDesc: "Get AI-powered crop suggestions based on your soil and weather",
+                diseaseDetection: "Disease Detection",
+                diseaseDetectionDesc: "Upload plant photos to detect diseases and get treatment advice",
+                fertilizerGuide: "Fertilizer Guide",
+                fertilizerGuideDesc: "Get personalized fertilizer recommendations for better yield",
+                pestControl: "Pest Control",
+                pestControlDesc: "Identify pests and get organic treatment solutions",
+                marketPrices: "Today's Market Prices",
+                aiAssistant: "AI Farming Assistant",
+                botWelcome: "Hello! I'm your AI farming assistant. Ask me anything about crops, weather, fertilizers, or farming techniques. How can I help you today?",
+                chatPlaceholder: "Type your question here...",
+                send: "Send"
+            },
+            hi: {
+                welcome: "स्मार्ट कृषि सहायक में आपका स्वागत है",
+                loginDesc: "बेहतर उत्पादन और टिकाऊ कृषि के लिए आपका AI-संचालित कृषि साथी",
+                username: "उपयोगकर्ता नाम / मोबाइल नंबर",
+                password: "पासवर्ड",
+                location: "अपना स्थान चुनें",
+                loginBtn: "डैशबोर्ड में लॉगिन करें",
+                welcomeBack: "वापस स्वागत है,",
+                todayWeather: "आज का मौसम",
+                humidity: "नमी",
+                rainfall: "वर्षा",
+                windSpeed: "हवा की गति",
+                uvIndex: "UV सूचकांक",
+                weatherAlerts: "⚠️ मौसम चेतावनी और सुझाव",
+                rainAlert: "भारी बारिश की उम्मीद",
+                rainAlertDesc: "अगले 2 दिनों में भारी बारिश की उम्मीद। कीटनाशक छिड़काव से बचें।",
+                cropRecommendation: "फसल सुझाव",
+                cropRecommendationDesc: "अपनी मिट्टी और मौसम के आधार पर AI-संचालित फसल सुझाव प्राप्त करें",
+                diseaseDetection: "रोग पहचान",
+                diseaseDetectionDesc: "रोगों की पहचान और उपचार सलाह के लिए पौधों की तस्वीरें अपलोड करें",
+                fertilizerGuide: "उर्वरक गाइड",
+                fertilizerGuideDesc: "बेहतर उत्पादन के लिए व्यक्तिगत उर्वरक सुझाव प्राप्त करें",
+                pestControl: "कीट नियंत्रण",
+                pestControlDesc: "कीटों की पहचान करें और जैविक उपचार समाधान प्राप्त करें",
+                marketPrices: "आज के बाजार भाव",
+                aiAssistant: "AI कृषि सहायक",
+                botWelcome: "नमस्ते! मैं आपका AI कृषि सहायक हूं। फसल, मौसम, उर्वरक या कृषि तकनीकों के बारे में कुछ भी पूछें। आज मैं आपकी कैसे मदद कर सकता हूं?",
+                chatPlaceholder: "यहाँ अपना प्रश्न टाइप करें...",
+                send: "भेजें"
+            }
+        };
+
+        // Initialize the application
+        window.onload = function() {
+            loadMarketPrices();
+            getCurrentLocation();
+            updateWeatherData();
+            
+            // Set up chat input enter key
+            document.getElementById('chatInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        };
+
+        // Login function
+        function login(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const location = document.getElementById('location').value;
+            
+            // Simple validation (in real app, this would be server-side)
+            if (username && password && location) {
+                currentUser = {
+                    name: username,
+                    location: location
+                };
+                
+                document.getElementById('farmerName').textContent = username;
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('dashboard').classList.add('active');
+                
+                // Update location display
+                document.getElementById('currentLocation').textContent = location;
+                
+                // Welcome message
+                speakText(`Welcome ${username}! Your farming dashboard is ready.`);
+            } else {
+                alert('Please fill all fields');
+            }
+        }
+
+        // Get current location
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    
+                    // In a real app, you would use a geocoding service
+                    console.log(`Location: ${lat}, ${lon}`);
+                });
+            }
+        }
+
+        // Update weather data
+        function updateWeatherData() {
+            // Simulated weather data (in real app, fetch from weather API)
+            const weatherData = {
+                temperature: Math.floor(Math.random() * 15) + 20,
+                condition: ['Sunny', 'Partly Cloudy', 'Cloudy', 'Rainy'][Math.floor(Math.random() * 4)],
+                humidity: Math.floor(Math.random() * 40) + 40,
+                rainfall: Math.floor(Math.random() * 10),
+                windSpeed: Math.floor(Math.random() * 20) + 5,
+                uvIndex: Math.floor(Math.random() * 10) + 1
+            };
+            
+            document.getElementById('temperature').textContent = `${weatherData.temperature}°C`;
+            document.getElementById('weatherCondition').textContent = weatherData.condition;
+            document.getElementById('humidity').textContent = `${weatherData.humidity}%`;
+            document.getElementById('rainfall').textContent = `${weatherData.rainfall}mm`;
+            document.getElementById('windSpeed').textContent = `${weatherData.windSpeed} km/h`;
+            document.getElementById('uvIndex').textContent = `${weatherData.uvIndex} ${weatherData.uvIndex > 7 ? '(Very High)' : weatherData.uvIndex > 5 ? '(High)' : '(Moderate)'}`;
+        }
+
+        // Load market prices
+        function loadMarketPrices() {
+            const crops = [
+                { name: 'Rice', price: 2850, change: '+2.5%', trend: 'up' },
+                { name: 'Wheat', price: 2150, change: '-1.2%', trend: 'down' },
+                { name: 'Cotton', price: 5800, change: '+5.8%', trend: 'up' },
+                { name: 'Sugarcane', price: 350, change: '+0.8%', trend: 'up' },
+                { name: 'Tomato', price: 25, change: '-8.5%', trend: 'down' },
+                { name: 'Onion', price: 18, change: '+12.3%', trend: 'up' },
+                { name: 'Potato', price: 22, change: '+3.2%', trend: 'up' },
+                { name: 'Corn', price: 1850, change: '-0.5%', trend: 'down' }
+            ];
+            
+            const priceGrid = document.getElementById('priceGrid');
+            priceGrid.innerHTML = '';
+            
+            crops.forEach(crop => {
+                const priceCard = document.createElement('div');
+                priceCard.className = 'price-card';
+                priceCard.innerHTML = `
+                    <div class="crop-name">${crop.name}</div>
+                    <div class="crop-price">₹${crop.price}/quintal</div>
+                    <div class="price-change ${crop.trend === 'up' ? 'price-up' : 'price-down'}">
+                        ${crop.trend === 'up' ? '↗' : '↘'} ${crop.change}
+                    </div>
+                `;
+                priceGrid.appendChild(priceCard);
+            });
+        }
+
+        // AI Chatbot functions
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addChatMessage(message, 'user');
+                input.value = '';
+                
+                // Simulate AI response
+                setTimeout(() => {
+                    const response = getAIResponse(message);
+                    addChatMessage(response, 'bot');
+                    speakText(response);
+                }, 1000);
+            }
+        }
+
+        function addChatMessage(message, sender) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}-message`;
+            messageDiv.textContent = message;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function getAIResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('weather') || lowerMessage.includes('rain') || lowerMessage.includes('temperature')) {
+                return "Based on current weather conditions, I recommend avoiding pesticide spraying for the next 2 days due to expected rainfall. This is a good time for soil preparation and organic fertilizer application.";
+            } else if (lowerMessage.includes('fertilizer') || lowerMessage.includes('nutrients')) {
+                return "For this season, I recommend using organic compost mixed with NPK fertilizer in 4:2:1 ratio. Apply 2 weeks before sowing for best results. Avoid over-fertilization as it can harm soil health.";
+            } else if (lowerMessage.includes('pest') || lowerMessage.includes('insect') || lowerMessage.includes('disease')) {
+                return "For natural pest control, try neem oil spray (2ml per liter water) in evening hours. Also consider companion planting with marigold and basil. Upload a photo of affected plants for specific treatment advice.";
+            } else if (lowerMessage.includes('crop') || lowerMessage.includes('plant') || lowerMessage.includes('grow')) {
+                return "Based on your soil type and current weather, I suggest considering drought-resistant varieties. Crop rotation with legumes will improve soil nitrogen. Check the crop recommendation tool for detailed suggestions.";
+            } else if (lowerMessage.includes('price') || lowerMessage.includes('market') || lowerMessage.includes('sell')) {
+                return "Current market prices are favorable for cotton and onions. Consider direct selling to avoid middleman costs. Check government e-NAM portal for best rates in your area.";
+            } else {
+                return "I'm here to help with farming advice! Ask me about weather, crops, fertilizers, pest control, market prices, or any farming techniques. You can also use voice commands or upload plant photos for disease detection.";
+            }
+        }
+
+        // Voice functions
+        function startVoiceInput() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-US';
+
+                recognition.onstart = function() {
+                    document.querySelector('.voice-btn').style.background = '#ff6b6b';
+                };
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('chatInput').value = transcript;
+                    sendMessage();
+                };
+
+                recognition.onend = function() {
+                    document.querySelector('.voice-btn').style.background = '#4CAF50';
+                };
+
+                recognition.start();
+            } else {
+                alert('Voice recognition not supported in this browser');
+            }
+        }
+
+        function toggleVoiceAssistant() {
+            const button = document.getElementById('voiceAssistant');
+            
+            if (!isVoiceListening) {
+                startVoiceAssistant();
+                button.classList.add('listening');
+                isVoiceListening = true;
+            } else {
+                stopVoiceAssistant();
+                button.classList.remove('listening');
+                isVoiceListening = false;
+            }
+        }
+
+        function startVoiceAssistant() {
+            speakText("Voice assistant activated. How can I help you with your farming today?");
+            
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                
+                recognition.continuous = true;
+                recognition.interimResults = false;
+                recognition.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-US';
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase();
+                    processVoiceCommand(transcript);
+                };
+
+                recognition.start();
+                window.voiceRecognition = recognition;
+            }
+        }
+
+        function stopVoiceAssistant() {
+            if (window.voiceRecognition) {
+                window.voiceRecognition.stop();
+            }
+            speakText("Voice assistant deactivated");
+        }
+
+        function processVoiceCommand(command) {
+            if (command.includes('weather') || command.includes('मौसम')) {
+                speakText("Current temperature is 28 degrees celsius with partly cloudy conditions. Humidity is 65 percent.");
+            } else if (command.includes('price') || command.includes('भाव') || command.includes('दाम')) {
+                speakText("Today's rice price is 2850 rupees per quintal, up by 2.5 percent. Cotton is at 5800 rupees per quintal.");
+            } else if (command.includes('crop recommendation') || command.includes('फसल सुझाव')) {
+                openModal('cropRecommendation');
+                speakText("Opening crop recommendation tool for you");
+            } else if (command.includes('disease') || command.includes('बीमारी')) {
+                openModal('diseaseDetection');
+                speakText("Opening disease detection tool. You can upload plant photos here.");
+            } else {
+                addChatMessage(command, 'user');
+                const response = getAIResponse(command);
+                addChatMessage(response, 'bot');
+                speakText(response);
+            }
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-US';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Modal functions
+        function openModal(modalType) {
+            const modalId = modalType + 'Modal';
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Crop recommendation
+        function getCropRecommendation() {
+            const soilType = document.getElementById('soilType').value;
+            const season = document.getElementById('season').value;
+            
+            const recommendations = {
+                'clay-kharif': ['Rice', 'Cotton', 'Sugarcane'],
+                'clay-rabi': ['Wheat', 'Mustard', 'Gram'],
+                'sandy-kharif': ['Millet', 'Groundnut', 'Cotton'],
+                'sandy-rabi': ['Barley', 'Mustard', 'Cumin'],
+                'loamy-kharif': ['Rice', 'Corn', 'Soybean'],
+                'loamy-rabi': ['Wheat', 'Peas', 'Potato'],
+                'black-kharif': ['Cotton', 'Sugarcane', 'Soybean'],
+                'black-rabi': ['Wheat', 'Gram', 'Linseed'],
+                'red-kharif': ['Rice', 'Ragi', 'Groundnut'],
+                'red-rabi': ['Wheat', 'Barley', 'Gram']
+            };
+            
+            const key = `${soilType}-${season}`;
+            const crops = recommendations[key] || ['Rice', 'Wheat', 'Cotton'];
+            
+            const resultDiv = document.getElementById('cropRecommendationResult');
+            resultDiv.innerHTML = `
+                <div class="recommendation-card">
+                    <h4>🌾 Recommended Crops for ${soilType} soil in ${season} season:</h4>
+                    <ul>
+                        ${crops.map(crop => `<li><strong>${crop}</strong> - High yield potential with current conditions</li>`).join('')}
+                    </ul>
+                    <p><strong>💡 Tip:</strong> Consider crop rotation and organic farming practices for sustainable yield.</p>
+                </div>
+            `;
+            
+            speakText(`For ${soilType} soil in ${season} season, I recommend growing ${crops.join(', ')}`);
+        }
+
+        // Disease detection
+        function analyzeDisease() {
+            const fileInput = document.getElementById('diseaseImage');
+            const file = fileInput.files[0];
+            
+            if (file) {
+                const resultDiv = document.getElementById('diseaseResult');
+                resultDiv.innerHTML = `
+                    <div class="recommendation-card">
+                        <h4>🔍 Disease Analysis Result:</h4>
+                        <p><strong>Detected:</strong> Leaf Blight (Simulated Result)</p>
+                        <p><strong>Confidence:</strong> 85%</p>
+                        <h5>Treatment Recommendations:</h5>
+                        <ul>
+                            <li>Remove affected leaves immediately</li>
+                            <li>Apply copper-based fungicide spray</li>
+                            <li>Improve air circulation around plants</li>
+                            <li>Avoid overhead watering</li>
+                        </ul>
+                        <p><strong>⚠️ Prevention:</strong> Use disease-resistant varieties and maintain proper plant spacing.</p>
+                    </div>
+                `;
+                
+                speakText("Disease analysis complete. Leaf blight detected with 85% confidence. Check the recommendations for treatment.");
+            }
+        }
+
+        function openCamera() {
+            // In a real app, this would open camera interface
+            alert('Camera feature would open here. For demo, please use file upload.');
+        }
+
+        // Fertilizer recommendation
+        function getFertilizerRecommendation() {
+            const cropType = document.getElementById('cropType').value;
+            const growthStage = document.getElementById('growthStage').value;
+            
+            const fertilizers = {
+                'rice-seedling': 'NPK 10:26:26 @ 100kg/hectare + Organic compost 2 tons/hectare',
+                'rice-vegetative': 'Urea @ 50kg/hectare + Potash @ 25kg/hectare',
+                'rice-flowering': 'NPK 19:19:19 @ 75kg/hectare',
+                'rice-fruiting': 'Potash @ 30kg/hectare + Micronutrient spray',
+                'wheat-seedling': 'DAP @ 100kg/hectare + Potash @ 50kg/hectare',
+                'wheat-vegetative': 'Urea @ 100kg/hectare in 2 splits',
+                'wheat-flowering': 'NPK 12:32:16 @ 50kg/hectare',
+                'wheat-fruiting': 'Foliar spray of micronutrients'
+            };
+            
+            const key = `${cropType}-${growthStage}`;
+            const recommendation = fertilizers[key] || 'NPK 10:10:10 @ 100kg/hectare + Organic matter';
+            
+            const resultDiv = document.getElementById('fertilizerResult');
+            resultDiv.innerHTML = `
+                <div class="recommendation-card">
+                    <h4>🧪 Fertilizer Recommendation for ${cropType} (${growthStage} stage):</h4>
+                    <p><strong>Recommended:</strong> ${recommendation}</p>
+                    <h5>Application Guidelines:</h5>
+                    <ul>
+                        <li>Apply in early morning or evening</li>
+                        <li>Ensure adequate soil moisture</li>
+                        <li>Mix with soil properly</li>
+                        <li>Avoid application before heavy rain</li>
+                    </ul>
+                    <p><strong>💡 Organic Alternative:</strong> Use vermicompost and bio-fertilizers for sustainable farming.</p>
+                </div>
+            `;
+            
+            speakText(`For ${cropType} in ${growthStage} stage, apply ${recommendation}`);
+        }
+
+        // Pest control advice
+        function getPestControlAdvice() {
+            const pestType = document.getElementById('pestType').value;
+            
+            const treatments = {
+                'aphids': {
+                    organic: 'Neem oil spray (5ml/liter) + Soap solution',
+                    chemical: 'Imidacloprid 17.8% SL @ 0.3ml/liter',
+                    prevention: 'Encourage beneficial insects like ladybugs'
+                },
+                'caterpillar': {
+                    organic: 'Bt (Bacillus thuringiensis) spray + Hand picking',
+                    chemical: 'Chlorpyrifos 20% EC @ 2ml/liter',
+                    prevention: 'Use pheromone traps and crop rotation'
+                },
+                'whitefly': {
+                    organic: 'Yellow sticky traps + Neem oil spray',
+                    chemical: 'Thiamethoxam 25% WG @ 0.2g/liter',
+                    prevention: 'Remove weed hosts and use reflective mulch'
+                }
+            };
+            
+            const treatment = treatments[pestType] || treatments['aphids'];
+            
+            const resultDiv = document.getElementById('pestControlResult');
+            resultDiv.innerHTML = `
+                <div class="recommendation-card">
+                    <h4>🐛 ${pestType.charAt(0).toUpperCase() + pestType.slice(1)} Control Methods:</h4>
+                    <h5>🌿 Organic Treatment:</h5>
+                    <p>${treatment.organic}</p>
+                    <h5>🧪 Chemical Treatment (if severe):</h5>
+                    <p>${treatment.chemical}</p>
+                    <h5>🛡️ Prevention:</h5>
+                    <p>${treatment.prevention}</p>
+                    <p><strong>⚠️ Safety:</strong> Always wear protective equipment and follow label instructions.</p>
+                </div>
+            `;
+            
+            speakText(`For ${pestType} control, use organic methods first. ${treatment.organic}`);
+        }
+
+        // Language change
+        function changeLanguage() {
+            currentLanguage = document.getElementById('languageSelect').value;
+            
+            // Update all translatable elements
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.textContent = translations[currentLanguage][key];
+                }
+            });
+            
+            // Update placeholders
+            const placeholders = document.querySelectorAll('[data-translate-placeholder]');
+            placeholders.forEach(element => {
+                const key = element.getAttribute('data-translate-placeholder');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.placeholder = translations[currentLanguage][key];
+                }
+            });
+            
+            speakText(currentLanguage === 'hi' ? 'भाषा बदल दी गई है' : 'Language changed successfully');
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        };
+
+        // Update weather every 30 minutes
+        setInterval(updateWeatherData, 30 * 60 * 1000);
+        
+        // Update market prices every hour
+        setInterval(loadMarketPrices, 60 * 60 * 1000);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'980a4b32d5fa93d3',t:'MTc1ODEyOTgzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
